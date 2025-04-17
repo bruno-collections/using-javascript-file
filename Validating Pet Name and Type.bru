@@ -1,0 +1,51 @@
+meta {
+  name: Validating Pet Name and Type
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseURL}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "users": [
+      { "name": "Bruno", "type": "fish" },
+      { "name": "Luna", "type": "frog" },
+      { "name": "Ziggy", "type": "human" }
+    ]
+  }
+  
+  
+}
+
+tests {
+  const { z } = require("zod");
+  
+  const response = res.getBody(); // Already parsed
+  
+  const UserSchema = z.object({
+    name: z.string(),
+    type: z.enum(["dog", "cat", "bird"])
+  });
+  
+  const Schema = z.object({
+    users: z.array(UserSchema)
+  });
+  
+  test("Validate response schema structure", () => {
+    Schema.parse(response); // This will throw if invalid and mark test as failed
+  });
+  
+  
+  
+  
+  
+}

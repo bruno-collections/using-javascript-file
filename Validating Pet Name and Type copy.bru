@@ -1,0 +1,40 @@
+meta {
+  name: Validating Pet Name and Type copy
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseURL}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "users": [
+      { "name": "Bruno", "type": "dog" },
+      { "name": "Luna", "type": "cat" },
+      { "name": "Ziggy", "type": "bird" }
+    ]
+  }
+  
+  
+}
+
+tests {
+  const { validatePetTypeResponse } = require("./contractTests.js");
+  
+  test("Validate response schema structure", () => {
+    validatePetTypeResponse(res.getBody());
+  });
+  
+  
+  
+  
+  
+}

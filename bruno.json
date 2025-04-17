@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Using JavaScript Files - Contract Testing",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "name": "External Library - Zod",
+  "version": "1",
+  "items": [
+    {
+      "type": "http",
+      "name": "Validating Pet Name and Type",
+      "filename": "Validating Pet Name and Type.bru",
+      "seq": 2,
+      "request": {
+        "url": "{{baseURL}}",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"users\": [\n    { \"name\": \"Bruno\", \"type\": \"dog\" },\n    { \"name\": \"Luna\", \"type\": \"cat\" },\n    { \"name\": \"Ziggy\", \"type\": \"bird\" }\n  ]\n}\n\n",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "const { z } = require(\"zod\");\n\nconst response = res.getBody(); // Already parsed\n\nconst UserSchema = z.object({\n  name: z.string(),\n  type: z.enum([\"dog\", \"cat\", \"bird\"])\n});\n\nconst Schema = z.object({\n  users: z.array(UserSchema)\n});\n\ntest(\"Validate response schema structure\", () => {\n  Schema.parse(response); // This will throw if invalid and mark test as failed\n});\n\n\n\n\n",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "Validating Pet Vaccines",
+      "filename": "Validating Pet Vaccines.bru",
+      "seq": 3,
+      "request": {
+        "url": "{{baseURL}}",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"pets\": [\n    {\n      \"id\": \"pet_002\",\n      \"name\": \"Jerry\",\n      \"age\": 4,\n      \"vaccinated\": true,\n      \"tags\": [\"friendly\", \"energetic\"]\n    },\n    {\n      \"id\": \"pet_005\",\n      \"name\": \"Sam\",\n      \"age\": 2,\n      \"vaccinated\": false,\n      \"tags\": [\"quiet\", \"food-motivated\"]\n    }\n  ]\n}\n",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "const { z } = require(\"zod\");\n\nconst response = res.getBody();\n\nconst PetSchema = z.object({\n  id: z.string().startsWith(\"pet_\"),\n  name: z.string(),\n  age: z.number().int().nonnegative(),\n  vaccinated: z.boolean(),\n  tags: z.array(z.string())\n});\n\nconst PetsResponseSchema = z.object({\n  pets: z.array(PetSchema)\n});\n\ntest(\"Valid response structure for pets\", () => {\n  PetsResponseSchema.parse(response);\n});\ntest(\"All pets must be vaccinated\", () => {\n  const unvaccinated = response.pets.filter(pet => !pet.vaccinated);\n  if (unvaccinated.length > 0) {\n    throw new Error(`Found unvaccinated pets: ${unvaccinated.map(p => p.name).join(\", \")}`);\n  }\n});\n",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "test",
+      "filename": "test.bru",
+      "seq": 4,
+      "request": {
+        "url": "www.example.com/",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    }
+  ],
+  "environments": [
+    {
+      "variables": [],
+      "name": "test"
+    }
+  ],
+  "root": {
+    "request": {
+      "vars": {
+        "req": [
+          {
+            "name": "baseURL",
+            "value": "https://echo.usebruno.com/",
+            "enabled": true,
+            "local": false,
+            "uid": "144hIEsFx806YDwpniXtq"
+          }
+        ]
+      }
+    }
+  },
+  "brunoConfig": {
+    "version": "1",
+    "name": "External Library - Zod",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ],
+    "size": 0.002033233642578125,
+    "filesCount": 5
+  }
+}
